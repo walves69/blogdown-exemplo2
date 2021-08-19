@@ -1,0 +1,44 @@
+{{ define "main" }}
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<!-- TODO: gallery -->
+  <div class="content" itemprop="articleBody">
+  {{ if (eq .Type "search") }}
+    <!-- TODO: search https://gohugo.io/tools/search/ -->
+  {{ else }}
+    {{ .Content }}
+  {{ end }}
+  </div>
+</article>
+  <div id="linkpara">
+    {{ $parentPage := . }}
+    <h1>Linked to:</h1>
+    <ul>
+    {{ range .Params.linkedArticles }}
+    {{ $ref := ref $parentPage . }}
+    {{ $page := $parentPage.GetPage . }}
+    <li>
+      <a href="{{ $ref }}">{{ $page.Title }}</a>
+    </li>
+    {{ end }}
+    </ul>
+  </div>
+  
+  <div id="referenciadopor">
+    {{ $parentPage := . }}
+    <h1>Referenced by:</h1>
+    <ul>
+    {{ range .Site.RegularPages }}
+    	{{ $page := . }}
+    		{{ range .Params.linkedArticles}}
+    		{{ $linkedPage := $parentPage.GetPage .}}
+    		{{ if eq $linkedPage $parentPage }}
+    		
+    		<li>
+    			<a href="{{ $page.Permalink }}">{{ $page.Title }}</a>
+    		</li>
+    		{{ end }}
+    	{{ end }}
+    {{ end }}
+    </ul>
+  </div>
+{{ end }}
